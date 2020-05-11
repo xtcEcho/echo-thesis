@@ -1,0 +1,1827 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Introduction to Three.js</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		<script src="https://code.jquery.com/jquery-3.5.0.min.js"></script>	
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/108/three.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.7/ScrollMagic.min.js"></script>
+		<script src="./trackball.js"></script>
+		<script src="./reflector.js"></script>
+		<script src="./dat.gui.module.js"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.2/TweenMax.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.2/plugins/TextPlugin.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/3.2.0/imagesloaded.pkgd.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.7/plugins/animation.gsap.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.2/TimelineLite.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.2/TimelineMax.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.2/plugins/ScrollToPlugin.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.5/plugins/debug.addIndicators.min.js"></script>
+		
+		<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
+
+		<style>
+			@font-face {
+				font-family: 'Reglo';
+				src: url(Reglo-Bold.otf);
+			}
+			@font-face {
+				font-family: 'Novar';
+				src: url(Novar.ttf);
+			}
+			@font-face {
+				font-family: 'Editorial';
+				src: url(EditorialNewUltralight200.otf);
+			}
+			html {
+				height: 100%;
+				margin: 0;
+			}
+			body {
+				overflow	: hidden;
+				padding		: 0;
+				margin		: 0;
+
+				color		: #222;
+				background: linear-gradient(to bottom,  #EEE 0%,#CCC 100%);
+				/* font-family: Arial, Helvetica, sans-serif; */
+				font-size	: 100%;
+			}
+
+			h1, h2 {
+				margin: 0;
+				padding: 0;
+				/* font-family: 'EB Garamond', serif; */
+				font-family: 'Editorial', sans-serif;
+				letter-spacing: -2px;
+				text-transform: uppercase;
+			}
+
+			h1 {
+				font-weight: lighter;
+				font-size: 166px;
+				line-height: 1.2;
+			}
+
+			h2 {
+				font-weight: lighter;
+				font-size: 88px;
+				line-height: 1.2;
+				/* font-style: italic; */
+			}
+
+			p {
+				font-family: nimbus-sans, sans-serif;
+				font-weight: 400;
+				font-size: 32px;
+				line-height: 1;
+				text-transform: uppercase;
+			}
+
+			#four{
+				text-align: justify;
+  				text-justify: inter-word;
+				
+			}
+			
+			.italic{
+				font-style: italic;
+				font-weight: normal;
+			}
+
+			.left{
+				text-align: left;
+			}
+
+			.middle{
+				text-align: center;
+			}
+
+			.right {
+				text-align: right;
+			}
+
+			.center {
+				text-align: center;
+			}
+
+			.halfright{
+				padding-left: 50%;
+			}
+
+			.halfleft{
+				padding-right: 50%;
+			}
+
+			.halfcenter{
+				padding-left: 25%;
+				padding-right: 25%;
+			}
+			/* #info .top {
+				position	: absolute;
+				top		: 0px;
+				width		: 100%;
+				padding		: 5px;
+				text-align	: center;
+			}
+			#info a {
+				color		: #66F;
+				text-decoration	: none;
+			}
+			#info a:hover {
+				text-decoration	: underline;
+			}
+			#info .bottom {
+				position	: absolute;
+				bottom		: 0px;
+				right		: 5px;
+				padding		: 5px;
+			} */
+			#main {
+				position: relative;
+				background-color: #f7efe2;
+			}
+
+			#container { 				
+				pointer-events: none; 				
+				position: absolute; 				
+				top: 0; 				
+				left: 0; 			
+			}  			
+			#text { 	
+				z-index: 10; 				
+				overflow: scroll; 				
+				height: 100vh; 				
+				width: 100vw; 			
+			}
+
+			
+			
+			section{
+				width: 100%;
+				height: 100%;
+				position:relative;
+				display: none;
+			}
+
+			.inner{
+				position: absolute;
+				top: 50%;
+				left: 20px;
+				right: 20px;
+				transform: translateY(-50%);
+				text-align: left;
+				/* width: 100%; */
+				
+			}
+
+			section .innerText{
+				/* opacity: 0;
+				visibility: hidden; */
+				position: absolute;
+				top: 50%;
+				left: 20px;
+				right: 20px;
+				transform: translateY(-50%);
+				/* text-align: left; */
+			}
+
+			.innerS9 p{ 
+				padding: 0;
+				margin: 0;
+				/* text-align: justify;
+  				text-justify: inter-word; */
+			}
+
+			.innerS14 h2, .innerS14 p{
+				margin: 0;
+				padding: 0;
+			}
+			
+/* 
+			#text section{
+				display: none;
+			} */
+			/* .innerS3{
+				opacity: 1;
+				visibility: visible;
+			} */
+
+		</style>
+	</head>
+<body>
+	<!-- three.js container -->
+		<div id='main'>
+			<div id="container"></div>
+			<!-- <div id="info">
+				<p class="top">Press 1 and 2 on the keyboard to switch cameras.
+						<br>The scene helpers are only visible through camera 1.</p>
+
+			</div> -->
+			<div id="text" >
+				<section id="one">
+					<div class="inner innerS1">
+						<h1 class="left">LOOK AT IT</h1>
+						<h1 class="middle">BECAUSE</h1>
+						<h1 class="right">I'M PROUD OF IT</h1>
+					</div>
+				</section>
+
+				<section id="two">
+					<div class="innerText innerS2">
+						<h2></h2>
+					</div>
+				</section>
+
+				<section id="three">
+					<div class="innerText innerS3">
+						<h2 class="halfright right">THE FEMINIST ACT OF BEING THE FEMALE NUDE IN EUROPEAN HIGH-ART</h2>
+					</div>
+				</section>
+
+				<section id="four">
+				  <div class="innerText innerS4">
+					  <p>We think this society is patriarchy by default. We think all artists are male, and by default, the naked women they portraying are passively getting objectified. Seeing and being seen is such an unbalanced game, whereas the seeing side is presumed to be completely dominant. However, in modern lingerie advertisement, an almost identical game of seeing and being seen as classical nude paintings, a completely different narrative is presented: the model - the female - takes total control of her body and is empowered by her physiques and sexuality. Why can’t it be true for the nudes in paintings? If we think like a powerful individual who takes control in her act, things can be completely different. Why can’t these women choose to be the object, and choose to be painted, to be seen? If they actively choose to be the object, can they still be objectified? As an individual confident in themselves, admiring their own bodies and embracing their sexuality, making the choice of exposing their nudes has become a display of undeniable self empowerment. </p>
+				  </div>
+				</section>
+				<section id="five">
+					<div class="innerText innerS5">
+						<h2></h2>
+				  </div>
+				</section>
+				<section id="six">
+					<div class="innerText innerS6">
+						<h2 class="right">CHOOSING TO BE SEEN IS NOT SEXIST, IT'S <span class="italic">FEMINIST</span></h2>
+				  </div>
+				</section>
+				<section id="seven">
+					<div class="innerText innerS7">
+						<h2 class="right"></h2>
+				  </div>
+				</section>
+				<section id="eight">
+					<div class="innerText innerS8">
+						<h2 class="halfleft right">IT'S ALL ABOUT <span class="italic">CHOICE</span></h2>
+				  </div>
+				</section>
+				<section id="nine">
+					<div class="innerText innerS9 halfright left">
+						<p>Feminism means whatever a woman wants to it be, without being questioned or discriminated based on gender.</p>
+						<p>It's fine to be strong, </p>
+						<p>it's fine to be feminine,</p>
+						<p>it's fine to be seen in lingerie,</p>
+						<p>it's fine to challenge whatever status quo is laid out for you without fear of consequence.</p>
+						<p>And it's also fine to be nude.</p>
+				  </div>
+				</section>
+				<section id="ten">
+					<div class="innerText innerS10">
+						<h2></h2>
+				  </div>
+				</section>
+				<section id="eleven">
+					<div class="innerText innerS11">
+						<p class="center">Lingerie model Charli Howard modeled for lingerie brand Agent Provocateur, and defining her act as a love letter to her body by posing in lingeries. </p>
+				  </div>
+				</section>
+				<section id="twelve">
+					<div class="innerText innerS12">
+						<h2></h2>
+				  </div>
+				</section>
+				<section id="thirteen">
+					<div class="innerText innerS13">
+						<p class="halfright right">And Portrait of a young woman and child, as Venus and Cupid, by Sir Peter Lely, is then a love letter in master stroke by Nell Gwyn, the model, to her body. In the Restoration England, she chose to be an actress and a partner to King Charles. She was never afraid of presenting herself, and thus, this piece of work is a champion of her comfidence and self-love.</p>
+				  </div>
+				</section>
+				<section id="fourteen">
+					<div class="innerText innerS14">
+						<h2 class="halfleft left">Everything a feminist does is a feminist act</h2>
+						<p class="halfleft left">And just like lingerie modeling, nude modeling is another opportunity for women to exercise their ability to choose—a choice based on how they want to look like and how they want to be seen and perceived.</p>
+				  </div>
+				</section>
+				<section id="fifteen">
+					<div class="innerText innerS15">
+						<p></p>
+				  </div>
+				</section>
+				<section id="sixteen">
+					<div class="innerText innerS16">
+						<p class="halfleft left">In Willaim-Adolphe Bouguereau’s most famous painting, The Birth of Venus, Venus arises, and demonstrates the absolute ownership of her own body. Her gesture and facial expression reflect that she is calm and comfortable with her nudity, and she is definitely not afraid of showing it. In a sense, The Birth of Venus is the predecessor of all modern, feminist lingerie advertisements.</p>
+				  </div>
+				</section>
+				<section id="seventeen">
+					<div class="innerText innerS17">
+						<h2></h2>
+				  </div>
+				</section>
+				<section id="eighteen">
+					<div class="innerText innerS18">
+						<p class="left">Female sexuality and sexiness, no matter how conditioned it may be by a patriarchal ideal, can be incredibly empowering for a woman if she feels it is empowering to her.</p>
+						<p class="right">The feeling of power comes from feeling like oneself. If one feels like getting record naked and getting seen by the public eye, then practice such act to celebrate your body</p>
+					</div>
+				</section>
+				<section id="nineteen">
+					<div class="innerText innerS19">
+						<h2></h2>
+				  </div>
+				</section>
+				<section id="twenty">
+					<div class="innerText innerS20">
+						<h2 class="center">Female nudes display the innate power that female sexuality possesses.</h2>
+				  </div>
+				</section>
+				<section id="twentyone">
+					<div class="innerText innerS21">
+						<h2 class="center">A woman becomes powerful to the extreme when she takes strength from embracing her sex.</h2>
+				  </div>
+				</section>
+			</div> 
+		</div>
+	<!-- info on screen display -->
+
+	<script type="text/javascript">
+
+	////////////////////////////three///////////////////////////////
+		
+		var stats, scene, renderer;
+		var camera, cameraControl;
+		var viewCamera, editCamera;
+		var dirLight, spotLight, spotLight2;
+		var helpers;
+		var cameraTarget = new THREE.Vector3(100,0,-100);
+		var targetObject1, targetObject2
+
+		// Path variables
+		var pathPositionFactor, pathColor, pathPosition, pathDirection, pathDirection, pathOrigin, pathTarget, pathCameraTarget;
+			
+
+		// Trefoil knot variables
+		const numberOfMeshes = 50;
+
+		//camera moving varible
+
+		// Bootstrap the animation
+		init();
+		animate();
+
+		// init the scene
+		function init(){
+			renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			renderer.shadowMap.renderSingleSided = false;
+			renderer.shadowMap.enabled = true;
+			renderer.shadowMap.type = THREE.VSMShadowMap;
+			// renderer.setClearColor(0xf7efe2, 0);
+
+			// Append the renderer's <canvas> element to the screen
+			document.getElementById('container').appendChild(renderer.domElement);
+
+			// Resize canvas when the screen resizes
+			document.addEventListener('resize', function() {
+				camera.aspect = width / height;
+				camera.updateProjectionMatrix();
+				renderer.setSize(width, height);
+			}, false);
+
+			// create the root scene
+			scene = new THREE.Scene();
+			scene.background = new THREE.Color(0xf7efe2)
+			// scene.Fog = new THREE.Fog( 0xf7efe2, -5, 20, 0.12 );
+			{
+				const color = 0xf7efe2;
+				const density = 0.09;
+				scene.fog = new THREE.FogExp2(color, density);
+			}
+
+			/* Cameras */ 
+
+			// Create an empty position for the camera to look at
+			// We don't even have to add it to the scene, it's just a space marker
+
+			// create the view camera
+			// viewCamera = new THREE.PerspectiveCamera(160, window.innerWidth / window.innerHeight, 1, 10 );
+			viewCamera = new THREE.PerspectiveCamera(120, window.innerWidth / window.innerHeight, 1, 20 );
+			viewCamera.position.set(0, 0, 310); // Position the camera above and away from the scene should be 10
+			// console.log(viewCamera)
+			// viewCamera.lookAt(cameraTarget); // Tell the camera to aim at our cameraTarget
+			scene.add(viewCamera);
+
+			// Create the edit camera
+			editCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000 );
+			editCamera.position.set(7, 7, 7); // Position the camera above and away from the scene
+			// scene.add(editCamera);
+
+			// Hook up camera trackball controls to editCamera
+			cameraControls	= new THREE.TrackballControls(editCamera, renderer.domElement);
+			viewControls = new THREE.TrackballControls(viewCamera, renderer.domElement);
+			
+			viewControls.noZoom = true;
+
+			// figure out right combination of mouse buttons to pan with left click
+			viewControls.mouseButtons.LEFT = THREE.MOUSE.ROTATE
+			viewControls.mouseButtons.RIGHT = THREE.MOUSE.ZOOM
+
+			// Assign edit camera as the initial camera to be used
+			camera = viewCamera;
+
+			/* Lights */
+
+			// Add lights to the scene
+			var light1	= new THREE.AmbientLight( 0x404040 );
+			scene.add( light1 );
+
+			// Add random directional light at random position
+			var light2	= new THREE.AmbientLight( 0x404040 );
+			// light2.position.set( Math.random(), Math.random(), Math.random() ).normalize().multiplyScalar(3);
+			// light2.lookAt(cameraTarget); // Tell the camera to aim at our cameraTarget
+			scene.add( light2 );
+
+			var light3	= new THREE.AmbientLight( 0x404040, 0.5 );
+			// scene.add( light3 );
+
+			var light4	= new THREE.AmbientLight( 0x404040 );
+			// scene.add( light4 );
+
+			// Add another random light
+			// var light3	= new THREE.DirectionalLight( 0xffffff );
+			// light3.position.set( Math.random(), Math.random(), Math.random() ).normalize().multiplyScalar(3);
+			// light3.lookAt(cameraTarget); // Tell the camera to aim at our cameraTarget
+			// scene.add(light3);
+
+			// var light4 = new THREE.DirectionalLight(0xcccccc, 1.5, 250)
+			// // light.position.x = 0;
+			// light4.position.z = 300;
+			// // light4.castShadow = true;
+			// // li
+			// scene.add( light4 )
+
+			spotLight = new THREE.SpotLight( 0x404040 );
+			// spotLight.name = 'Spot Light';
+			spotLight.angle = Math.PI/ 3;
+			spotLight.penumbra = 0.3;
+			spotLight.position.set( 30, 30, 300 );
+			spotLight.castShadow = true;
+			spotLight.shadow.camera.near = 10;
+			spotLight.shadow.camera.far = 300;
+			spotLight.shadow.mapSize.width = 256;
+			spotLight.shadow.mapSize.height = 256;
+			spotLight.shadow.bias = -0.002;
+			spotLight.shadow.radius = 3;
+			targetObject1 = new THREE.Object3D(-20, -10, 280);
+			scene.add(targetObject1);
+
+			spotLight.target = targetObject1;
+			scene.add( spotLight );
+
+			spotLight2 = new THREE.SpotLight( 0x404040 );
+			// spotLight2.name = 'Spot Light';
+			spotLight2.angle = Math.PI/ 3;
+			spotLight2.penumbra = 0.3;
+			spotLight2.position.set( -50, 30, 300 );
+			spotLight2.castShadow = true;
+			spotLight2.shadow.camera.near = 10;
+			spotLight2.shadow.camera.far = 300;
+			spotLight2.shadow.mapSize.width = 256;
+			spotLight2.shadow.mapSize.height = 256;
+			spotLight2.shadow.bias = -0.002;
+			spotLight2.shadow.radius = 3;
+			targetObject2 = new THREE.Object3D(30, -10, 280);
+			scene.add(targetObject2);
+
+			spotLight2.target = targetObject2;
+			scene.add( spotLight2 );
+			// scene.add(spo)
+
+			//add directional light to cast shadow
+			// dirLight = new THREE.DirectionalLight( 0xFFFF00, 1 );
+			// dirLight.position.set(-3, 12, 300);
+			// dirLight.castShadow = true;
+			// dirLight.shadow.camera.near = 0.1;
+			// dirLight.shadow.camera.far = 500;
+			// dirLight.shadow.camera.right = 17;
+			// dirLight.shadow.camera.left = - 17;
+			// dirLight.shadow.camera.top	= 17;
+			// dirLight.shadow.camera.bottom = - 17;
+			// dirLight.shadow.mapSize.width = 512;
+			// dirLight.shadow.mapSize.height = 512;
+			// dirLight.shadow.radius = 4;
+			// dirLight.shadow.bias = -0.0005;
+			// dirLight.shadowDarkness = 0.5
+			// dirLight.shadowCameraVisible = true;
+			// scene.add( dirLight );
+
+			// dirGroup = new THREE.Group();
+			// dirGroup.add(dirLight);
+			// scene.add(dirGroup);
+
+
+
+			// light4.shadow.mapSize.width = 512;  // default
+			// light4.shadow.mapSize.height = 512; // default
+			// light4.shadow.camera.near = 0.5;       // default
+			// light4.shadow.camera.far = 500   
+
+		
+
+			
+			/* Motion Path */
+			pathPositionFactor = 0.0;
+			pathColor = 0xffff00;
+
+			pathPosition  = new THREE.Vector3();
+			// pathPosition = new THREE.Vector3(0, 0, 100)
+			pathDirection = new THREE.Vector3();
+			pathDirection = new THREE.Vector3();
+			pathCameraTarget = new THREE.Vector3();
+			pathOrigin 		= new THREE.Vector3(0, 0, 300); 
+			pathTarget 		= new THREE.Vector3(0, 0, 0); 
+			
+			var pathLength    = pathOrigin.distanceTo(pathTarget); 
+			pathDirection.subVectors( pathTarget, pathOrigin ).normalize();
+			pathCameraTarget.lerpVectors(pathOrigin, pathTarget, 1.1);
+			var arrowHelper = new THREE.ArrowHelper( pathDirection, pathOrigin, pathLength, pathColor );
+			// scene.add( arrowHelper );
+
+			var API = {
+				lightProbeIntensity: 1.0,
+				directionalLightIntensity: 0.2,
+				envMapIntensity: 1
+			};
+
+			let floorMaterial, floorGeometry, floorMesh
+			floorMaterial = new THREE.MeshPhongMaterial({
+					color: 0xf7efe2,
+					// shininess: 0,
+					// specular: 0x111111
+				})
+			floorGeometry = new THREE.PlaneBufferGeometry(200, 400)
+			// floorMesh = new THREE.Reflector( floorGeometry, {
+			// 		clipBias: 0.003,
+			// 		textureWidth: window.innerWidth * window.devicePixelRatio,
+			// 		textureHeight: window.innerHeight * window.devicePixelRatio,
+			// 		color: 0x777777
+			// 	} );
+			floorMesh = new THREE.Mesh(floorGeometry, floorMaterial)
+			floorMesh.position.set(0, -10, 200)
+			floorMesh.rotateX(-1.5708)
+			// floorMesh.rotateX(-1.5);
+			floorMesh.castShadow = true;
+			floorMesh.receiveShadow = true;
+			floorMesh.material.shadowSide = THREE.FrontSide;
+			scene.add(floorMesh)
+			// floorMesh.material.shadowSide = THREE.FrontSide;
+			// console.log(floorMesh.position)
+
+			// var material = new THREE.MeshPhongMaterial( {
+			// 		color: 0x999999,
+			// 		shininess: 0,
+			// 		specular: 0x222222
+			// 	} );
+
+			// var geometry = new THREE.CylinderBufferGeometry( 0.75, 0.75, 7, 32 );
+			// var pillar1 = new THREE.Mesh( geometry, material );
+			// pillar1.position.set( 5, -2, 280 );
+			// pillar1.castShadow = true;
+			// pillar1.receiveShadow = true;
+			// scene.add(pillar1)
+
+			installPaintings();
+
+			/* Helpers */ 
+			// var helper;
+
+			// Create a helper layer, this will let us group helpers and 
+			// hide / show them all at once
+
+			// helpers = new THREE.Object3D();
+			// scene.add(helpers);
+			
+		}
+
+		function installPaintings() {
+			let loader, material, geometry, mesh, painting
+
+			loader = new THREE.TextureLoader();
+
+
+			THREE.ImageUtils.crossOrigins = '';
+			painting = THREE.ImageUtils.loadTexture('galleries/William-Adolphe_Bouguereau_(1825-1905)_-_The_Nymphaeum_(1878).jpg');
+			painting.anisotropy = renderer.getMaxAnisotropy();
+			geometry = new THREE.CubeGeometry(22.95, 15.975, 0.05);
+			material = [
+				new THREE.MeshBasicMaterial({
+					color: 'white' //left
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //right
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // top
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // bottom
+				}),
+				new THREE.MeshBasicMaterial({
+					map: painting // front
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //back
+				})
+			];
+			mesh = new THREE.Mesh(geometry, material);
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			mesh.position.set(-12, 0, 276)
+			scene.add(mesh);
+
+			THREE.ImageUtils.crossOrigins = '';
+			painting = THREE.ImageUtils.loadTexture('galleries/Le_Salon_Case_Study8.jpg');
+			painting.anisotropy = renderer.getMaxAnisotropy();
+			geometry = new THREE.CubeGeometry(20, 13.73, 0.05);
+			material = [
+				new THREE.MeshBasicMaterial({
+					color: 'white' //left
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //right
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // top
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // bottom
+				}),
+				new THREE.MeshBasicMaterial({
+					map: painting // front
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //back
+				})
+			];
+			mesh = new THREE.Mesh(geometry, material);
+			mesh.position.set(-14, 0, 248)
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			scene.add(mesh);
+
+			THREE.ImageUtils.crossOrigins = '';
+			painting = THREE.ImageUtils.loadTexture('galleries/Edouard_Manet_-_Luncheon_on_the_Grass_-_Google_Art_Project.jpg');
+			painting.anisotropy = renderer.getMaxAnisotropy();
+			geometry = new THREE.CubeGeometry(20.3364, 15.7952, 0.05);
+			material = [
+				new THREE.MeshBasicMaterial({
+					color: 'white' //left
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //right
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // top
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // bottom
+				}),
+				new THREE.MeshBasicMaterial({
+					map: painting // front
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //back
+				})
+			];
+			mesh = new THREE.Mesh(geometry, material);
+			mesh.position.set(8, 3, 254)
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			scene.add(mesh);
+
+
+			THREE.ImageUtils.crossOrigins = '';
+			painting = THREE.ImageUtils.loadTexture('galleries/François_Boucher_-_Brown_Odalisque_.jpg');
+			painting.anisotropy = renderer.getMaxAnisotropy();
+			geometry = new THREE.CubeGeometry(14.4,11.724, 0.05);
+			material = [
+				new THREE.MeshBasicMaterial({
+					color: 'white' //left
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //right
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // top
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // bottom
+				}),
+				new THREE.MeshBasicMaterial({
+					map: painting // front
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //back
+				})
+			];
+			mesh = new THREE.Mesh(geometry, material);
+			mesh.position.set(-8, -2, 230)
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			scene.add(mesh);
+
+			THREE.ImageUtils.crossOrigins = '';
+			painting = THREE.ImageUtils.loadTexture('galleries/MWM04899.jpg');
+			painting.anisotropy = renderer.getMaxAnisotropy();
+			geometry = new THREE.CubeGeometry(15.36, 8.4913, 0.05);
+			material = [
+				new THREE.MeshBasicMaterial({
+					color: 'white' //left
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //right
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // top
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // bottom
+				}),
+				new THREE.MeshBasicMaterial({
+					map: painting // front
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //back
+				})
+			];
+			mesh = new THREE.Mesh(geometry, material);
+			mesh.position.set(13, 3, 223)
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			scene.add(mesh);
+
+			THREE.ImageUtils.crossOrigins = '';
+			painting = THREE.ImageUtils.loadTexture('galleries/la-fornarina-by-raphael.jpg');
+			painting.anisotropy = renderer.getMaxAnisotropy();
+			geometry = new THREE.CubeGeometry(15.75, 24.7725, 0.05);
+			material = [
+				new THREE.MeshBasicMaterial({
+					color: 'white' //left
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //right
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // top
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // bottom
+				}),
+				new THREE.MeshBasicMaterial({
+					map: painting // front
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //back
+				})
+			];
+			mesh = new THREE.Mesh(geometry, material);
+			mesh.position.set(9, -3, 210)
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			scene.add(mesh);
+
+			THREE.ImageUtils.crossOrigins = '';
+			painting = THREE.ImageUtils.loadTexture('galleries/2649.jpg');
+			painting.anisotropy = renderer.getMaxAnisotropy();
+			geometry = new THREE.CubeGeometry(14, 21.14, 0.05);
+			material = [
+				new THREE.MeshBasicMaterial({
+					color: 'white' //left
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //right
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // top
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // bottom
+				}),
+				new THREE.MeshBasicMaterial({
+					map: painting // front
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //back
+				})
+			];
+			mesh = new THREE.Mesh(geometry, material);
+			mesh.position.set(-10, 0, 195)
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			scene.add(mesh);
+
+			THREE.ImageUtils.crossOrigins = '';
+			painting = THREE.ImageUtils.loadTexture('galleries/Paul Gauguin | Two Tahitian Women.jpg');
+			painting.anisotropy = renderer.getMaxAnisotropy();
+			geometry = new THREE.CubeGeometry(17.304, 22.332, 0.05);
+			material = [
+				new THREE.MeshBasicMaterial({
+					color: 'white' //left
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //right
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // top
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // bottom
+				}),
+				new THREE.MeshBasicMaterial({
+					map: painting // front
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //back
+				})
+			];
+			mesh = new THREE.Mesh(geometry, material);
+			mesh.position.set(0, 2, 180)
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			scene.add(mesh);
+
+			THREE.ImageUtils.crossOrigins = '';
+			painting = THREE.ImageUtils.loadTexture('galleries/CAMPAIGN+STILL+1.jpg');
+			painting.anisotropy = renderer.getMaxAnisotropy();
+			geometry = new THREE.CubeGeometry(15, 22.5, 0.05);
+			material = [
+				new THREE.MeshBasicMaterial({
+					color: 'white' //left
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //right
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // top
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // bottom
+				}),
+				new THREE.MeshBasicMaterial({
+					map: painting // front
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //back
+				})
+			];
+			mesh = new THREE.Mesh(geometry, material);
+			mesh.position.set(10, 1, 173)
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			scene.add(mesh);
+
+			THREE.ImageUtils.crossOrigins = '';
+			painting = THREE.ImageUtils.loadTexture('galleries/1200px-Pierre-Auguste_Renoir_125.jpg');
+			painting.anisotropy = renderer.getMaxAnisotropy();
+			geometry = new THREE.CubeGeometry(16.2, 10.854, 0.05);
+			material = [
+				new THREE.MeshBasicMaterial({
+					color: 'white' //left
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //right
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // top
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // bottom
+				}),
+				new THREE.MeshBasicMaterial({
+					map: painting // front
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //back
+				})
+			];
+			mesh = new THREE.Mesh(geometry, material);
+			mesh.position.set(-12, 1, 170)
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			scene.add(mesh);
+
+			THREE.ImageUtils.crossOrigins = '';
+			painting = THREE.ImageUtils.loadTexture('galleries/c7dc164faf478f1d148dcd1b7bab50ed.jpeg');
+			painting.anisotropy = renderer.getMaxAnisotropy();
+			geometry = new THREE.CubeGeometry(16, 12.54, 0.05);
+			material = [
+				new THREE.MeshBasicMaterial({
+					color: 'white' //left
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //right
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // top
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // bottom
+				}),
+				new THREE.MeshBasicMaterial({
+					map: painting // front
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //back
+				})
+			];
+			mesh = new THREE.Mesh(geometry, material);
+			mesh.position.set(10, -2, 150)
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			scene.add(mesh);
+
+			THREE.ImageUtils.crossOrigins = '';
+			painting = THREE.ImageUtils.loadTexture('galleries/Lely_venus-cupid.jpg');
+			painting.anisotropy = renderer.getMaxAnisotropy();
+			geometry = new THREE.CubeGeometry(22.1, 17.06, 0.05);
+			material = [
+				new THREE.MeshBasicMaterial({
+					color: 'white' //left
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //right
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // top
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // bottom
+				}),
+				new THREE.MeshBasicMaterial({
+					map: painting // front
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //back
+				})
+			];
+			mesh = new THREE.Mesh(geometry, material);
+			mesh.position.set(-10, 0, 138)
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			scene.add(mesh);
+
+			THREE.ImageUtils.crossOrigins = '';
+			painting = THREE.ImageUtils.loadTexture('galleries/SS19_LOOKBOOK_CROP_LENITA_ETTIE.jpg');
+			painting.anisotropy = renderer.getMaxAnisotropy();
+			geometry = new THREE.CubeGeometry(13.34, 16.5, 0.05);
+			material = [
+				new THREE.MeshBasicMaterial({
+					color: 'white' //left
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //right
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // top
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // bottom
+				}),
+				new THREE.MeshBasicMaterial({
+					map: painting // front
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //back
+				})
+			];
+			mesh = new THREE.Mesh(geometry, material);
+			mesh.position.set(-9, -3, 122)
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			scene.add(mesh);
+
+			THREE.ImageUtils.crossOrigins = '';
+			painting = THREE.ImageUtils.loadTexture('galleries/Bouguereau-Evening_Mood_1882.jpg');
+			painting.anisotropy = renderer.getMaxAnisotropy();
+			geometry = new THREE.CubeGeometry(13.5, 26, 0.05);
+			material = [
+				new THREE.MeshBasicMaterial({
+					color: 'white' //left
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //right
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // top
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // bottom
+				}),
+				new THREE.MeshBasicMaterial({
+					map: painting // front
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //back
+				})
+			];
+			mesh = new THREE.Mesh(geometry, material);
+			mesh.position.set(8, 1, 121)
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			scene.add(mesh);
+
+			THREE.ImageUtils.crossOrigins = '';
+			painting = THREE.ImageUtils.loadTexture('galleries/8daa8e6aa30c15786a6d34074cd47cde3089979.jpg');
+			painting.anisotropy = renderer.getMaxAnisotropy();
+			geometry = new THREE.CubeGeometry(22.05, 12.792, 0.05);
+			material = [
+				new THREE.MeshBasicMaterial({
+					color: 'white' //left
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //right
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // top
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // bottom
+				}),
+				new THREE.MeshBasicMaterial({
+					map: painting // front
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //back
+				})
+			];
+			mesh = new THREE.Mesh(geometry, material);
+			mesh.position.set(10, 0, 112)
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			scene.add(mesh);
+
+			THREE.ImageUtils.crossOrigins = '';
+			painting = THREE.ImageUtils.loadTexture('galleries/the reading girl.jpg');
+			painting.anisotropy = renderer.getMaxAnisotropy();
+			geometry = new THREE.CubeGeometry(14, 13.968, 0.05);
+			material = [
+				new THREE.MeshBasicMaterial({
+					color: 'white' //left
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //right
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // top
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // bottom
+				}),
+				new THREE.MeshBasicMaterial({
+					map: painting // front
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //back
+				})
+			];
+			mesh = new THREE.Mesh(geometry, material);
+			mesh.position.set(-7, 3, 110)
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			scene.add(mesh);
+
+			THREE.ImageUtils.crossOrigins = '';
+			painting = THREE.ImageUtils.loadTexture('galleries/William-Adolphe_Bouguereau_(1825-1905)_-_The_Birth_of_Venus_(1879).jpg');
+			painting.anisotropy = renderer.getMaxAnisotropy();
+			geometry = new THREE.CubeGeometry(15.75, 22.8825, 0.05);
+			material = [
+				new THREE.MeshBasicMaterial({
+					color: 'white' //left
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //right
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // top
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // bottom
+				}),
+				new THREE.MeshBasicMaterial({
+					map: painting // front
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //back
+				})
+			];
+			mesh = new THREE.Mesh(geometry, material);
+			mesh.position.set(10, 1, 95)
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			scene.add(mesh);
+
+			THREE.ImageUtils.crossOrigins = '';
+			painting = THREE.ImageUtils.loadTexture('galleries/SS19_LOOKBOOK_CROP_ZADI.jpg');
+			painting.anisotropy = renderer.getMaxAnisotropy();
+			geometry = new THREE.CubeGeometry(13.34, 16.5, 0.05);
+			material = [
+				new THREE.MeshBasicMaterial({
+					color: 'white' //left
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //right
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // top
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // bottom
+				}),
+				new THREE.MeshBasicMaterial({
+					map: painting // front
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //back
+				})
+			];
+			mesh = new THREE.Mesh(geometry, material);
+			mesh.position.set(-6, 2, 85)
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			scene.add(mesh);
+
+			THREE.ImageUtils.crossOrigins = '';
+			painting = THREE.ImageUtils.loadTexture('galleries/1024px-The_Three_Graces_by_Peter_Paul_Rubens_from_Prado_in_Google_Earth.jpg');
+			painting.anisotropy = renderer.getMaxAnisotropy();
+			geometry = new THREE.CubeGeometry(15.285, 18.72, 0.05);
+			material = [
+				new THREE.MeshBasicMaterial({
+					color: 'white' //left
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //right
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // top
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // bottom
+				}),
+				new THREE.MeshBasicMaterial({
+					map: painting // front
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //back
+				})
+			];
+			mesh = new THREE.Mesh(geometry, material);
+			mesh.position.set(10, -1, 65)
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			scene.add(mesh);
+
+			THREE.ImageUtils.crossOrigins = '';
+			painting = THREE.ImageUtils.loadTexture('galleries/a favorite custom.jpg');
+			painting.anisotropy = renderer.getMaxAnisotropy();
+			geometry = new THREE.CubeGeometry(12.48, 18.432, 0.05);
+			material = [
+				new THREE.MeshBasicMaterial({
+					color: 'white' //left
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //right
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // top
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // bottom
+				}),
+				new THREE.MeshBasicMaterial({
+					map: painting // front
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //back
+				})
+			];
+			mesh = new THREE.Mesh(geometry, material);
+			mesh.position.set(-8, 2, 62)
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			scene.add(mesh);
+
+			THREE.ImageUtils.crossOrigins = '';
+			painting = THREE.ImageUtils.loadTexture('galleries/CAMPAIGN-STILL-8.jpg');
+			painting.anisotropy = renderer.getMaxAnisotropy();
+			geometry = new THREE.CubeGeometry(26.04, 14.6475, 0.05);
+			material = [
+				new THREE.MeshBasicMaterial({
+					color: 'white' //left
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //right
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // top
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // bottom
+				}),
+				new THREE.MeshBasicMaterial({
+					map: painting // front
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //back
+				})
+			];
+			mesh = new THREE.Mesh(geometry, material);
+			mesh.position.set(-5, 1, 53)
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			scene.add(mesh);
+
+			THREE.ImageUtils.crossOrigins = '';
+			painting = THREE.ImageUtils.loadTexture('galleries/William-Adolphe_Bouguereau_-_Les_Oréades.jpg');
+			painting.anisotropy = renderer.getMaxAnisotropy();
+			geometry = new THREE.CubeGeometry(16.875, 22.1475, 0.05);
+			material = [
+				new THREE.MeshBasicMaterial({
+					color: 'white' //left
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //right
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // top
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' // bottom
+				}),
+				new THREE.MeshBasicMaterial({
+					map: painting // front
+				}),
+				new THREE.MeshBasicMaterial({
+					color: 'white' //back
+				})
+			];
+			mesh = new THREE.Mesh(geometry, material);
+			mesh.position.set(0, 1, 40)
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			scene.add(mesh);
+			// THREE.ImageUtils.crossOrigins = '';
+			// painting = THREE.ImageUtils.loadTexture('galleries/Edouard_Manet_-_Olympia.jpg');
+			// painting.anisotropy = renderer.getMaxAnisotropy();
+			// geometry = new THREE.CubeGeometry(24.642, 16.51, 0.05);
+			// material = [
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //left
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //right
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' // top
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' // bottom
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		map: painting // front
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //back
+			// 	})
+			// ];
+			// mesh = new THREE.Mesh(geometry, material);
+			// mesh.position.set(1.5, 0, 253)
+			// mesh.castShadow = true;
+			// mesh.receiveShadow = true;
+			// scene.add(mesh);
+
+			// THREE.ImageUtils.crossOrigins = '';
+			// painting = THREE.ImageUtils.loadTexture('galleries/Paul Gauguin | Two Tahitian Women.jpg');
+			// painting.anisotropy = renderer.getMaxAnisotropy();
+			// geometry = new THREE.CubeGeometry(17.304, 22.332, 0.05);
+			// material = [
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //left
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //right
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' // top
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' // bottom
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		map: painting // front
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //back
+			// 	})
+			// ];
+			// mesh = new THREE.Mesh(geometry, material);
+			// mesh.position.set(-10, -5, 237)
+			// mesh.castShadow = true;
+			// mesh.receiveShadow = true;
+			// scene.add(mesh);
+
+			// THREE.ImageUtils.crossOrigins = '';
+			// painting = THREE.ImageUtils.loadTexture('galleries/Tiziano_-_Venere_di_Urbino_-_Google_Art_Project.jpg');
+			// painting.anisotropy = renderer.getMaxAnisotropy();
+			// geometry = new THREE.CubeGeometry(13.5, 9.495, 0.05);
+			// material = [
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //left
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //right
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' // top
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' // bottom
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		map: painting // front
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //back
+			// 	})
+			// ];
+			// mesh = new THREE.Mesh(geometry, material);
+			// mesh.position.set(-10, 6, 220)
+			// mesh.castShadow = true;
+			// mesh.receiveShadow = true;
+			// scene.add(mesh);
+
+
+			// THREE.ImageUtils.crossOrigins = '';
+			// painting = THREE.ImageUtils.loadTexture('galleries/MWM04899.jpg');
+			// painting.anisotropy = renderer.getMaxAnisotropy();
+			// geometry = new THREE.CubeGeometry(15.36, 8.4913, 0.05);
+			// material = [
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //left
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //right
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' // top
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' // bottom
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		map: painting // front
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //back
+			// 	})
+			// ];
+			// mesh = new THREE.Mesh(geometry, material);
+			// mesh.position.set(13, -3, 218)
+			// mesh.castShadow = true;
+			// mesh.receiveShadow = true;
+			// scene.add(mesh);
+
+			// THREE.ImageUtils.crossOrigins = '';
+			// painting = THREE.ImageUtils.loadTexture('galleries/Bouguereau-Evening_Mood_1882.jpg');
+			// painting.anisotropy = renderer.getMaxAnisotropy();
+			// geometry = new THREE.CubeGeometry(18, 34.6725, 0.05);
+			// material = [
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //left
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //right
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' // top
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' // bottom
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		map: painting // front
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //back
+			// 	})
+			// ];
+			// mesh = new THREE.Mesh(geometry, material);
+			// mesh.position.set(0, -8, 200)
+			// mesh.castShadow = true;
+			// mesh.receiveShadow = true;
+			// scene.add(mesh);
+
+			// THREE.ImageUtils.crossOrigins = '';
+			// painting = THREE.ImageUtils.loadTexture('galleries/la-fornarina-by-raphael.jpg');
+			// painting.anisotropy = renderer.getMaxAnisotropy();
+			// geometry = new THREE.CubeGeometry(15.75, 24.7725, 0.05);
+			// material = [
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //left
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //right
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' // top
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' // bottom
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		map: painting // front
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //back
+			// 	})
+			// ];
+			// mesh = new THREE.Mesh(geometry, material);
+			// mesh.position.set(-14, -3, 196)
+			// mesh.castShadow = true;
+			// mesh.receiveShadow = true;
+			// scene.add(mesh);
+
+			// THREE.ImageUtils.crossOrigins = '';
+			// painting = THREE.ImageUtils.loadTexture('galleries/the reading girl.jpg');
+			// painting.anisotropy = renderer.getMaxAnisotropy();
+			// geometry = new THREE.CubeGeometry(14, 13.968, 0.05);
+			// material = [
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //left
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //right
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' // top
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' // bottom
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		map: painting // front
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //back
+			// 	})
+			// ];
+			// mesh = new THREE.Mesh(geometry, material);
+			// mesh.position.set(9, 0, 193)
+			// mesh.castShadow = true;
+			// mesh.receiveShadow = true;
+			// scene.add(mesh);
+
+			// THREE.ImageUtils.crossOrigins = '';
+			// painting = THREE.ImageUtils.loadTexture('galleries/1024px-The_Three_Graces_by_Peter_Paul_Rubens_from_Prado_in_Google_Earth.jpg');
+			// painting.anisotropy = renderer.getMaxAnisotropy();
+			// geometry = new THREE.CubeGeometry(15.285, 18.72, 0.05);
+			// material = [
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //left
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //right
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' // top
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' // bottom
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		map: painting // front
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //back
+			// 	})
+			// ];
+			// mesh = new THREE.Mesh(geometry, material);
+			// mesh.position.set(-6, 2, 185)
+			// mesh.castShadow = true;
+			// mesh.receiveShadow = true;
+			// scene.add(mesh);
+
+			// THREE.ImageUtils.crossOrigins = '';
+			// painting = THREE.ImageUtils.loadTexture('galleries/1200px-Pierre-Auguste_Renoir_125.jpg');
+			// painting.anisotropy = renderer.getMaxAnisotropy();
+			// geometry = new THREE.CubeGeometry(16.2, 10.854, 0.05);
+			// material = [
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //left
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //right
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' // top
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' // bottom
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		map: painting // front
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //back
+			// 	})
+			// ];
+			// mesh = new THREE.Mesh(geometry, material);
+			// mesh.position.set(-12, 0, 181)
+			// mesh.castShadow = true;
+			// mesh.receiveShadow = true;
+			// scene.add(mesh);
+
+			// THREE.ImageUtils.crossOrigins = '';
+			// painting = THREE.ImageUtils.loadTexture('galleries/William-Adolphe_Bouguereau_(1825-1905)_-_The_Birth_of_Venus_(1879).jpg');
+			// painting.anisotropy = renderer.getMaxAnisotropy();
+			// geometry = new THREE.CubeGeometry(21, 30.51, 0.05);
+			// material = [
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //left
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //right
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' // top
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' // bottom
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		map: painting // front
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //back
+			// 	})
+			// ];
+			// mesh = new THREE.Mesh(geometry, material);
+			// mesh.position.set(10, 4, 178)
+			// mesh.castShadow = true;
+			// mesh.receiveShadow = true;
+			// scene.add(mesh);
+
+			// THREE.ImageUtils.crossOrigins = '';
+			// painting = THREE.ImageUtils.loadTexture('galleries/Rubens,_Pieter_Paul_-_The_Union_of_Earth_and_Water_(Antwerp_and_the_Scheldt).jpg');
+			// painting.anisotropy = renderer.getMaxAnisotropy();
+			// geometry = new THREE.CubeGeometry(18, 22.425, 0.05);
+			// material = [
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //left
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //right
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' // top
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' // bottom
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		map: painting // front
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //back
+			// 	})
+			// ];
+			// mesh = new THREE.Mesh(geometry, material);
+			// mesh.position.set(7, 2, 160)
+			// mesh.castShadow = true;
+			// mesh.receiveShadow = true;
+			// scene.add(mesh);
+
+			// THREE.ImageUtils.crossOrigins = '';
+			// painting = THREE.ImageUtils.loadTexture('galleries/William-Adolphe_Bouguereau_-_Les_Oréades.jpg');
+			// painting.anisotropy = renderer.getMaxAnisotropy();
+			// geometry = new THREE.CubeGeometry(22.5, 29.53, 0.05);
+			// material = [
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //left
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //right
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' // top
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' // bottom
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		map: painting // front
+			// 	}),
+			// 	new THREE.MeshBasicMaterial({
+			// 		color: 'white' //back
+			// 	})
+			// ];
+			// mesh = new THREE.Mesh(geometry, material);
+			// mesh.position.set(-4, -2, 155)
+			// mesh.castShadow = true;
+			// mesh.receiveShadow = true;
+			// scene.add(mesh);
+		}
+		
+
+		// animation loop
+		function animate() {
+			// Call the function again when the browser is free 
+			requestAnimationFrame( animate );
+
+			// do the render
+			render();
+		}
+
+		// render the scene
+		function render() {
+			// console.log(scrolling)
+			console.log(viewCamera.position)
+
+			// variable which is increase by Math.PI every seconds - usefull for animation
+			var time = Date.now() * Math.PI;
+
+			// update camera controls
+			if( camera === editCamera ) {
+				cameraControls.update()
+			} else {
+				viewControls.update()
+			}
+			
+
+			// actually render the scene
+			renderer.render( scene, camera );
+
+			// console.log(dirLight.position)
+
+			// Update path interpolation
+			pathPosition.lerpVectors(pathOrigin, pathTarget, pathPositionFactor);
+			// pathPosition.add(pathPositionFactor)
+			
+			// console.log(pathPosition)
+			viewCamera.position.copy(pathPosition);
+			// viewCamera.lookAt(pathCameraTarget);
+
+			spotLight.position.z = viewCamera.position.z;
+			spotLight2.position.z = viewCamera.position.z ;
+			targetObject1.position.z = viewCamera.position.z -20;
+			targetObject2.position.z = viewCamera.position.z -20;
+
+			// iterate over all objects in a scene
+			scene.traverse(function(object3d, i){
+				// Check if the current object is a THREE.Mesh (rather than a light, camera, etc.)
+				if(object3d instanceof THREE.DirectionalLight === true){
+					// console.log(object3d.position)
+				}
+				if( object3d instanceof THREE.Mesh === false )	return
+
+			})
+		}
+
+
+		var movementIncrement = 0.00015;
+
+		function moveForward() {
+			pathPositionFactor += movementIncrement;
+			
+			pathPositionFactor = Math.min(1, Math.max(0, pathPositionFactor));
+		}
+
+		function moveBackward() {
+			pathPositionFactor -= movementIncrement;
+			
+			pathPositionFactor = Math.min(1, Math.max(0, pathPositionFactor));
+		}
+
+		function sectionWheelHandler(currSection, prevSection, deltaY){
+		
+			if ($(currSection).is(':hidden')){
+				if(deltaY > 0){
+					$('section').not(currSection).slideUp('slow');
+					$(currSection).show();
+				} else if(deltaY < 0){
+					$('section').not(currSection).slideDown('slow', function(){
+						$('section').not(currSection).hide();
+							
+					});
+					$(currSection).slideDown('slow');
+				}
+			} else {
+				$('section').not(currSection).not(prevSection).hide();
+			}
+		}
+		window.addEventListener("wheel", function(e) {
+			if (camera !== viewCamera) return
+			let zposition = viewCamera.position.z;
+			// console.log(zposition)
+			if (zposition <= 300 && zposition > 295){
+				sectionWheelHandler('#one',null, e.deltaY)
+			}
+			if (zposition <= 295 && zposition > 292){
+				sectionWheelHandler('#two', '#one', e.deltaY)
+			}
+			if (zposition <= 292 && zposition > 277){
+				sectionWheelHandler('#three', '#two', e.deltaY)
+			}
+			if (zposition <= 277 && zposition > 267){
+				sectionWheelHandler('#four', '#three', e.deltaY)
+			}
+			if (zposition <= 267 && zposition > 250.5){
+				sectionWheelHandler('#five', '#four', e.deltaY)
+			}
+			if (zposition <= 250.5 && zposition > 245){
+				sectionWheelHandler('#six', '#five', e.deltaY)
+			}
+			if (zposition <= 245 && zposition > 225){
+				sectionWheelHandler('#seven', '#six', e.deltaY)
+			}
+			if (zposition <= 225 && zposition > 213){
+				sectionWheelHandler('#eight', '#seven', e.deltaY)
+			}
+			if (zposition <= 212 && zposition > 198){
+				sectionWheelHandler('#nine', '#eight', e.deltaY)
+			}
+			if (zposition <= 198 && zposition > 172){
+				sectionWheelHandler('#ten', '#nine', e.deltaY)
+			}
+			if (zposition <= 172 && zposition > 160){
+				sectionWheelHandler('#eleven', '#ten', e.deltaY)
+			}
+			if (zposition <= 160 && zposition > 151){
+				sectionWheelHandler('#twelve', '#eleven', e.deltaY)
+			}
+			if (zposition <= 151 && zposition > 140){
+				sectionWheelHandler('#thirteen', '#twelve', e.deltaY)
+			}
+			if (zposition <= 140 && zposition > 130){
+				sectionWheelHandler('#fourteen', '#thirteen', e.deltaY)
+			}
+			if (zposition <= 130 && zposition > 110){
+				sectionWheelHandler('#fifteen', '#fourteen', e.deltaY)
+			}
+			if (zposition <= 110 && zposition > 99){
+				sectionWheelHandler('#sixteen', '#fifteen', e.deltaY)
+			}
+			if (zposition <= 99 && zposition > 85){
+				sectionWheelHandler('#seventeen', '#sixteen', e.deltaY)
+			}
+			if (zposition <= 85 && zposition > 76){
+				sectionWheelHandler('#eighteen', '#seventeen', e.deltaY)
+			}
+			if (zposition <= 76 && zposition > 39){
+				sectionWheelHandler('#nineteen', '#eighteen', e.deltaY)
+			}
+			if (zposition <= 39 && zposition > 30){
+				sectionWheelHandler('#twenty', '#nineteen', e.deltaY)
+			}
+			if (zposition <= 30 && zposition > 21){
+				sectionWheelHandler('#twentyone', '#twenty', e.deltaY)
+			}
+			if(e.deltaY > 0 && camera.position.z > 20){
+				moveForward()
+			}
+			if(e.deltaY < 0 && camera.position.z < 300){
+				moveBackward()
+			}
+			return true;
+		}, true);
+
+		// Listen for keypresses and change active camera and helper layers
+		document.onkeydown = function(e) {
+			if(e.keyCode === 49) {
+				camera = editCamera;
+				helpers.visible = true;
+				// console.log(viewCamera.position)
+			}
+
+			if(e.keyCode === 50) {
+				camera = viewCamera;
+				helpers.visible = false;
+				// console.log(viewCamera.position)
+			}
+
+			if(e.keyCode == 38) {
+				moveForward()
+				// console.log(viewCamera.position)
+			}
+
+			if(e.keyCode == 40) {
+				moveBackward()
+				// console.log(viewCamera.position)
+			}
+		}
+
+		
+
+	</script>
+	<script src='script.js'></script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "name": "three-js-boilerplate",
+  "version": "1.0.0",
+  "description": "",
+  "main": "scripts.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github-learnthreejs:learnthreejs/three-js-boilerplate.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.15.3",
+    "lax.js": "^1.2.5",
+    "locomotive-scroll": "^3.3.11",
+    "scrollmagic": "^2.0.7"
+  }
+}

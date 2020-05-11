@@ -1,0 +1,69 @@
+body {
+  font: 16px/1.5 'Open Sans', Helvetica, Helvetica Neue, Arial, sans-serif;
+  color: rgba(0, 0, 0, 0.9);
+}
+ 
+html, body {
+  height: 100%;
+  margin: 0;
+}
+ 
+h1 {
+  padding:0;
+  margin: 0;
+  /* text-align: center; */
+  font-size: 36px;
+  color: rgba(0, 0, 0, 0.9);
+  position: relative;
+}
+
+ 
+p {
+
+  color: rgba(0, 0, 0, 0.5);
+}
+ 
+strong {
+  color: rgba(0, 0, 0, 0.9);
+}
+section {
+  height: 100%;
+  position: relative;
+  /* text-align
+  : center; */
+}
+
+.innerS1{
+  padding-top: 20%
+}
+ 
+/* Center aligned first section */
+section .inner {
+  /* margin: 0 auto; */
+  max-width: 85%;
+}
+ 
+/* Content of the following sections aligned next to the iphone */
+section .innerText {
+  opacity: 0;
+  visibility: hidden;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  text-align: left;
+}
+ 
+
+/* Bullet list */
+.features {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  color: rgba(0, 0, 0, 0.6);
+}
+.features li {
+  position: relative;
+  padding-left: 17px;
+}
+ 
